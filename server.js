@@ -1,7 +1,7 @@
 const express = require('express');
 const serveIndex = require('serve-index');
 
-const host = 'localhost';
+const host = '0.0.0.0';
 const port = process.argv[2] || 8000;
 
 const app = express();
