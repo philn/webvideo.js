@@ -51,7 +51,7 @@ export class WVPlayer {
     this.#videoDecoder = new WVVideoDecoderWorkerFront({
       maxVideoFrameLength: this.#maxVideoFrameLength,
     });
-    this.#audioDecoder = new WVAudioDecoderWorkerFront();
+    //this.#audioDecoder = new WVAudioDecoderWorkerFront();
   }
 
   async load(cb?: { onStart?: () => Promise<void>; onEnd?: () => Promise<void> }): Promise<void> {
@@ -65,16 +65,16 @@ export class WVPlayer {
     {
       // decoder init
       this.#videoStream = await this.#videoDecoder.init(this.#shared);
-      this.#audioStream = await this.#audioDecoder.init(this.#shared);
+      // this.#audioStream = await this.#audioDecoder.init(this.#shared);
 
       // renderer init
       this.#videoRenderer = new WVVideoRenderer(this.#initParams.canvasElem, this.#videoStream);
-      this.#audioRenderer = new WVAudioRenderer(this.#audioStream);
-      const port = await this.#audioRenderer.init(this.#shared, this.#audioStream);
+      this.#audioRenderer = new WVAudioRenderer(null);
+      //const port = await this.#audioRenderer.init(this.#shared, this.#audioStream);
 
       // decoder start
       this.#videoDecoder.start();
-      this.#audioDecoder.start(port);
+      //this.#audioDecoder.start(port);
 
       await new Promise((resolve) => {
         const sharedState = this.#shared;
@@ -82,7 +82,8 @@ export class WVPlayer {
           if (sharedState.playState.load() !== WVPlayStateKind.BUFFERING) {
             return resolve(0);
           }
-          if (sharedState.videoBufferFull.load() && sharedState.audioBufferFull.load()) {
+          if (sharedState.videoBufferFull.load() // && sharedState.audioBufferFull.load()
+             ) {
             return resolve(0);
           }
           requestAnimationFrame(preloadLoop);
@@ -111,7 +112,7 @@ export class WVPlayer {
       await this.#audioRenderer?.close();
 
       await this.#videoDecoder.uninit(this.#shared);
-      await this.#audioDecoder.uninit(this.#shared);
+      //await this.#audioDecoder.uninit(this.#shared);
     }
     await cb?.onEnd?.();
   }
@@ -125,7 +126,7 @@ export class WVPlayer {
   }
 
   canPlay(): boolean {
-    return this.#shared.audioBufferFull.load();
+      return true; //this.#shared.audioBufferFull.load();
   }
 
   async play(): Promise<void> {
@@ -150,7 +151,7 @@ export class WVPlayer {
       return;
     }
 
-    if (!this.#videoRenderer || !this.#audioRenderer) {
+    if (!this.#videoRenderer) {
       logger.error('Renderers are not initialized yet', 'WVPlayer');
       return;
     }
