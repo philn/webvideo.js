@@ -12,7 +12,7 @@ To test locally, execute `npm install && npm run publish && node server.js`.
 
 ## Attributions for videos
 
-* [Tears of Steal](https://mango.blender.org/) by Blender Foundation [CC BY 3.0](https://creativecommons.org/licenses/by/3.0/)
+* [Tears of Steel](https://mango.blender.org/) by Blender Foundation [CC BY 3.0](https://creativecommons.org/licenses/by/3.0/)
 
 * [Elephants Dream](https://orange.blender.org/) by Blender Foundation [CC BY](https://orange.blender.org/blog/creative-commons-license-2/)
 
