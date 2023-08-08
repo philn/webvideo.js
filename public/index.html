@@ -10,12 +10,12 @@
 
   * {
     box-sizing: border-box;
-    color: rgb(231, 233, 234);
-    font-family: Meiryo, system-ui, sans-serif, "Font Awesome 5 Free"
   }
 
   html, body {
+    font-family: Meiryo, system-ui, sans-serif, "Font Awesome 5 Free";
     background: rgb(20,20,20);
+    color: rgb(231, 233, 234);
     width: 100%;
     height: 100%;
     margin: 0;
@@ -23,79 +23,57 @@
   }
 
   #app_root {
-    width: 100%;
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: min-content 1fr min-content;
     height: 100%;
-    padding: 0 2vw;
-
-    display: flex;
-    flex-direction: column;
-    justify-content: space-around;
-    align-items: center;
+    text-align: center;
   }
 
-  #title {
-    font-weight: bold;
-    font-size: 2rem;
-  }
-  
-  #link a{
-    color: rgb(100,100, 255);
-    font-size: 1.0rem;
+  code {
+    font-family: monospace, sans-serif;
+    font-size: 1em;
   }
 
   #explainer_area {
-    text-align: center;
-    width: 60vw;
-  }
-
-  #video_area {
     display: flex;
-    flex-direction: column;
-    width: fit-content;
-    align-self: center;
+    align-items: center;
+    justify-content: center;
+    padding-block: 1em;
+    padding-inline: 10vw;
+    font-size: 1.9vmax;
+    font-weight: 900;
+    text-wrap: balance;
+    background: 
+    	radial-gradient(50vw 50vw at center, rgb(210 210 255 / 0.9755) 40vw, rgb(210 210 255 / 0.9)),
+    	repeating-linear-gradient(100deg, rgb(0 0 255 / 0.5) 1ch, transparent 2ch, rgb(0 0 255 / 0.5) 2.1ch) 0% 50%,
+    	rgb(210 210 255);
+    color: rgb(0 0 0);
   }
 
-  #control_area {
+  #video_area, #monitor_area {
     display: flex;
-    flex-direction: row;
-    padding: 1vh 0;
-  }
-
-  select#video_select {
-    color: white;
-    background: #15539E;
-    outline: none;
-    border: none;
-    font-size: 0.9rem;
-  }
-
-  select#video_select > option {
-    color: white;
-    background: #446D9E;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    min-height: 0;
+    max-height: 100%;
   }
   
   #monitor_area {
     position: relative;
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
-    align-content: center;
   }
 
   #play_btn_wrapper {
-
     background: rgba(0,0,0,0.5);
     color: white;
     font-weight: bold;
-    /* padding: 1vh 2vw; */
-    font-size: 1.5rem;
-    border-radius: 0.8rem;
+    font-size: 2.2vmax;
+    border-radius: 1.15vmax;
     position: absolute;
     text-align: center;
-
     user-select: none;
-
     display: flex;
     flex-direction: row;
     justify-content: center;
@@ -103,22 +81,18 @@
     align-content: center;
   }
 
-  #play_btn_wrapper:hover{
+  #play_btn_wrapper:hover {
     opacity: 1 !important;
   }
-
 
   #play_btn {
     padding: 2.2vh 2.2vw;
   }
 
   #loader_wrapper {
-
     background: transparent;
     position: absolute;
-
     user-select: none;
-
     display: flex;
     flex-direction: row;
     justify-content: center;
@@ -129,54 +103,74 @@
   img.loader_img {
   }
 
-
   canvas#monitor {
-    background: rgb(10,10,10);
-    height: 60vh;
-    width: 80vw;
+    display: block;
+    width: 100%;
+    height: 100%;
+    max-width: 100%;
+    max-height: 100%;
+    min-height: 0;
     object-fit: contain;
+    background: rgb(210 210 255 / 0.25);
   }
 
+  #title_area {
+    display: grid;
+    grid-template-columns: max-content 1fr;
+  }
+  
+  #title_area > * {
+    display: flex;
+    align-items: end;
+    margin-block: 0;
+    padding-block: 1em;
+    font-size: 1.5vmax;
+  }
+  
+  #title_area h2 {
+    justify-content: end;
+    padding-inline: 10vw 0;
+    background: 
+    	linear-gradient(90deg, rgb(210 210 255 / 0.75), rgb(210 210 255 / 0.95) 7.5vw, rgb(210 210 255 / 1) 100%) 0 50%,
+    	repeating-linear-gradient(100deg, rgb(0 0 255 / 0.5) 1ch, transparent 2ch, rgb(0 0 255 / 0.5) 2.1ch) 0% 50%,
+    	rgb(210 210 255);
+    color: rgb(0 0 0);
+  }
+  #title_area h3 {
+    justify-content: start;
+    padding-inline: 2em 10vw;
+    border-top: 1px solid rgb(210 210 255 / 0.67);
+    background: 
+    	linear-gradient(100deg, rgb(210 210 255) 40%, transparent 42%, 48%, rgb(210 210 255) 50%, 57%, transparent 58%) 0% 50% / 2em 4em no-repeat,
+    	rgb(210 210 255 / 0.1);
+  }
 </style>
 <body>
 
-  <a href="https://github.com/crux14/webvideo.js" target="_blank" rel="noopener noreferrer">
-    <img style="position: absolute; top: 0; right: 0; border: 0;" src="./assets/forkme.png" alt="Fork me on GitHub">
-  </a>
-
   <div id="app_root">
 
-    <div id="title">WebCodecs Video Player Demo</div>
-
-    <div id="link">
-      <a href="https://github.com/crux14/webvideo.js" target="_blank" rel="noopener noreferrer">
-        https://github.com/crux14/webvideo.js
-      </a>
-    </div>
-
     <div id="explainer_area">
-      Simple video player demo made with WebCodecs / AudioWorklet. (No HTML5 videos!)<br>
-      Currently works only with Chrome+94.
+      <span>
+        A simple video player made with WebCodecs and AudioWorklet, rendering to a <code>&lt;canvas&gt;</code> element.
+      </span>
     </div>
 
     <div id="video_area">
 
-      <div id="control_area">
-        <select name="videos" id="video_select">
-            <option value="">Select a video from the drop-down menu</option>
-            <option value="./assets/TearsOfSteel.mp4">[Excerpt] Tears of Steel by Blender Foundation (CC BY 3.0)</option>
-            <option value="./assets/ElephantsDream.mp4">[Excerpt] Elephants Dream by Blender Foundation (CC BY)</option>
-        </select>
-      </div>
-
       <div id="monitor_area">
-        <div id="play_btn_wrapper" style="display: none"><div id="play_btn" class="fas"></div></div>
+        <div id="play_btn_wrapper"><div id="play_btn" style="display: block" class="fas"></div></div>
         <div id="loader_wrapper" style="display: none"><img class="loader_img" src="./assets/loader.svg"/></div>
         <canvas id="monitor" width="800" height="600"></canvas>
       </div>
 
     </div>
 
+    <footer id="title_area">
+      <h2>Now playing</h2>
+      <h3>[title_of_video]</h3>
+    </footer>
+
   </div>
+
 </body>
 </html>
