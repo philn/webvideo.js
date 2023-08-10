@@ -61,7 +61,8 @@ window.addEventListener('load', async () => {
   const skipElem = document.querySelector('#title_area') as HTMLElement;
 
   const videoCount = movies.length;
-  let videoIndex = 1;
+  let videoIndex = 0;
+  let timeout;
 
 //  selectBtnElem.addEventListener('change', async (e) => {
 //    const elem = e.target as HTMLOptionElement;
@@ -108,27 +109,7 @@ window.addEventListener('load', async () => {
           },
         });
       }
-
-			player = new WVPlayer({
-				videoUrl: new URL(movies[videoIndex][0], location.origin).href,
-				canvasElem: document.querySelector('#monitor') as HTMLCanvasElement,
-			});
-			
-			playTitleElem.textContent = movies[videoIndex][1];
-
-			await player.load({
-				onStart: async () => {
-					hidePlayBtn(playBtnWrapperElem);
-					showLoader(loaderElem);
-				},
-				onEnd: async () => {
-					hideLoader(loaderElem);
-					showPlayBtn(playBtnWrapperElem);
-					autohidePlayBtn(false, playBtnWrapperElem);
-					setPlayBtnIcon(PlayBtnIcon.FONTAWESOME_PLAY, playBtnElem);
-				},
-			});
-			
+			advance();
 		}
     
     switch (player.playState()) {
@@ -146,17 +127,19 @@ window.addEventListener('load', async () => {
         setPlayBtnIcon(PlayBtnIcon.FONTAWESOME_PLAY, playBtnElem);
         break;
       }
+      case WVPlayStateKind.STOPPED: {
+        advance();
+      }
     }
 
   });
   
   skipElem.addEventListener('click', async () => {
-  	videoIndex++;
-  	if (videoIndex > videoCount - 1) videoIndex = 0;
-		advance(videoIndex);
-  });
+		advance();
+});
 
-	async function advance(videoIndex = 0) {
+	async function advance() {
+  	if (videoIndex >= videoCount) videoIndex = 0;
   	if (player) player.unload();
 		player = new WVPlayer({
 			videoUrl: new URL(movies[videoIndex][0], location.origin).href,
@@ -179,6 +162,10 @@ window.addEventListener('load', async () => {
 			autohidePlayBtn(true, playBtnWrapperElem);
 			setPlayBtnIcon(PlayBtnIcon.FONTAWESOME_PAUSE, playBtnElem);
 			playTitleElem.textContent = movies[videoIndex][1];
+    	videoIndex++;
+    	clearTimeout(timeout);
+    	console.log(player.lengthMS());
+    	timeout = setTimeout(advance, player.lengthMS() + 2345);
 		}
 	}
 

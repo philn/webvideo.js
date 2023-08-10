@@ -165,4 +165,20 @@ export class WVPlayer {
 
     requestAnimationFrame(this.mainLoop.bind(this));
   }
+
+  duration(): number {
+    return this.#videoStream.duration;
+  }
+  timescale(): number {
+    return this.#videoStream.timescale;
+  }
+  length(): number {
+  	return this.#videoStream.duration / this.#videoStream.timescale;
+  }
+  lengthMS(): number {
+  	return this.#videoStream.duration / this.#videoStream.timescale * 1000;
+  }
+  bitrate(): number {
+    return this.#videoStream.bitrate;
+  }
 }
