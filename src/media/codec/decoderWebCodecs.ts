@@ -160,7 +160,7 @@ async function createAudioDecoder(
   // [TODO] maybe we should parse the description?
 
   const config = {
-    codec: stream.codec === 'mp4a.6b' ? 'mp3' : stream.codec,
+    codec: stream.codec === 'mp4a.6b' ? 'mp3' : stream.codec.toLowerCase(),
     sampleRate: stream.audio!.sampleRate,
     numberOfChannels: stream.audio!.nbChannels,
   } as AudioDecoderConfig;
