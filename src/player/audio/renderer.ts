@@ -9,7 +9,7 @@ export class WVAudioRenderer {
 
   constructor(audioStream: WVMediaStreamInfo) {
     this.#audioCtx = new AudioContext({
-        sampleRate: 44100,
+      sampleRate: audioStream.audio!.sampleRate,
       latencyHint: 'playback',
     });
     this.#audioCtx.suspend();
