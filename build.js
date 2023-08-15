@@ -13,7 +13,6 @@ function watchEnabled() {
   const browserOptions = {
     entryPoints: [
       path.resolve(__dirname, 'src/index.ts'),
-      path.resolve(__dirname, 'src/index-old.ts'),
       path.resolve(__dirname, 'src/player/video/decoderWorker/worker.ts'),
       path.resolve(__dirname, 'src/player/audio/decoderWorker/worker.ts'),
       path.resolve(__dirname, 'src/player/audio/rendererWorker/worker.ts'),
