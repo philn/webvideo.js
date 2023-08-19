@@ -51,11 +51,14 @@ export class WVPlayer {
     logger.setLevel(this.#shared.loglevel);
   }
 
-    async setUrl(url: string, cb?: { onStart?: () => Promise<void>; onEnd?: () => Promise<void> }): Promise<void> {
-        await this.unload();
-        this.#shared.videoUrl = url;
-        return this.load(cb);
-    }
+  async setUrl(
+    url: string,
+    cb?: { onStart?: () => Promise<void>; onEnd?: () => Promise<void> }
+  ): Promise<void> {
+    await this.unload();
+    this.#shared.videoUrl = url;
+    return this.load(cb);
+  }
 
   async load(cb?: { onStart?: () => Promise<void>; onEnd?: () => Promise<void> }): Promise<void> {
     if (this.#isLoadCalled) {
@@ -63,13 +66,13 @@ export class WVPlayer {
     }
     this.#isLoadCalled = true;
 
-      this.#shared.videoDecoderShouldBeDead.store(false);
-      this.#shared.audioDecoderShouldBeDead.store(false);
+    this.#shared.videoDecoderShouldBeDead.store(false);
+    this.#shared.audioDecoderShouldBeDead.store(false);
 
-      this.#videoDecoder = new WVVideoDecoderWorkerFront({
-          maxVideoFrameLength: this.#maxVideoFrameLength,
-      });
-      this.#audioDecoder = new WVAudioDecoderWorkerFront();
+    this.#videoDecoder = new WVVideoDecoderWorkerFront({
+      maxVideoFrameLength: this.#maxVideoFrameLength,
+    });
+    this.#audioDecoder = new WVAudioDecoderWorkerFront();
 
     this.#shared.playState.store(WVPlayStateKind.BUFFERING);
     await cb?.onStart?.();
@@ -111,7 +114,7 @@ export class WVPlayer {
 
   async unload(cb?: { onStart?: () => Promise<void>; onEnd?: () => Promise<void> }): Promise<void> {
     if (!this.#isLoadCalled) {
-        return;
+      return;
     }
     this.#isLoadCalled = false;
 
@@ -123,10 +126,10 @@ export class WVPlayer {
 
       await this.#videoDecoder.uninit(this.#shared);
       await this.#audioDecoder.uninit(this.#shared);
-        this.#shared.videoBufferFull.store(false);
-        this.#shared.audioBufferFull.store(false);
-        this.#videoDecoder = null;
-        this.#audioDecoder = null;
+      this.#shared.videoBufferFull.store(false);
+      this.#shared.audioBufferFull.store(false);
+      this.#videoDecoder = null;
+      this.#audioDecoder = null;
     }
     await cb?.onEnd?.();
   }
@@ -177,10 +180,10 @@ export class WVPlayer {
       this.#videoDecoder.pop(this.#shared);
     }
 
-      if (currentTime >= this.length()) {
-          await this.pause();
-          await this.onEOS();
-      }
+    if (currentTime >= this.length()) {
+      await this.pause();
+      await this.onEOS();
+    }
     requestAnimationFrame(this.mainLoop.bind(this));
   }
 
@@ -191,10 +194,10 @@ export class WVPlayer {
     return this.#videoStream.timescale;
   }
   length(): number {
-  	return this.#videoStream.duration / this.#videoStream.timescale;
+    return this.#videoStream.duration / this.#videoStream.timescale;
   }
   lengthMS(): number {
-  	return this.#videoStream.duration / this.#videoStream.timescale * 1000;
+    return (this.#videoStream.duration / this.#videoStream.timescale) * 1000;
   }
   bitrate(): number {
     return this.#videoStream.bitrate;

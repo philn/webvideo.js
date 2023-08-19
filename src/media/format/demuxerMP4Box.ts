@@ -112,7 +112,7 @@ function createWVMediaStreamInfo(
       width: (track as MP4Box.MP4VideoTrack).video.width,
       height: (track as MP4Box.MP4VideoTrack).video.height,
     };
-    if (track.codec.startsWith("avc")) {
+    if (track.codec.startsWith('avc')) {
       video.avcDescription = createAVCDescription(trackIdx, file);
     }
   } else if (streamType === 'audio') {

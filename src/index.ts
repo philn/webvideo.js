@@ -4,9 +4,9 @@ import { WVPlayStateKind } from './core/state';
 let player: WVPlayer | undefined;
 
 // TODO: We can't rely on AAC-encoded assets here. opus and flac should work though.
-let movies:datatype[][] = [
-	["./assets/TearsOfSteel.mp4",   "[Excerpt] “Tears of Steel” by Blender Foundation (CC BY 3.0)"],
-	["./assets/ElephantsDream.mp4", "[Excerpt] “Elephants Dream” by Blender Foundation (CC BY)"]
+let movies: datatype[][] = [
+  ['./assets/TearsOfSteel.mp4', '[Excerpt] “Tears of Steel” by Blender Foundation (CC BY 3.0)'],
+  ['./assets/ElephantsDream.mp4', '[Excerpt] “Elephants Dream” by Blender Foundation (CC BY)'],
 ];
 
 enum PlayBtnIcon {
@@ -46,7 +46,7 @@ window.addEventListener('beforeunload', (e) => {
 
   if (player?.loadCalled()) {
     player?.unload();
-//    blockingSleep(1000);
+    //    blockingSleep(1000);
   }
 
   e.preventDefault();
@@ -65,17 +65,16 @@ window.addEventListener('load', async () => {
   let videoIndex = 0;
 
   player = new WVPlayer({
-	  canvasElem: document.querySelector('#monitor') as HTMLCanvasElement,
-	});
+    canvasElem: document.querySelector('#monitor') as HTMLCanvasElement,
+  });
   player.onEOS = async () => {
     videoIndex++;
     await advance();
-  }
+  };
 
   setPlayBtnIcon(PlayBtnIcon.FONTAWESOME_PLAY, playBtnElem);
 
   playBtnElem.addEventListener('click', async () => {
-
     switch (player.playState()) {
       case WVPlayStateKind.PAUSED: {
         if (player.canPlay()) {
@@ -95,34 +94,32 @@ window.addEventListener('load', async () => {
         await advance();
       }
     }
-
   });
 
   skipElem.addEventListener('click', async () => {
-		await advance();
+    await advance();
   });
 
-	async function advance() {
-  	  if (videoIndex >= videoCount)
-          videoIndex = 0;
-      const url = new URL(movies[videoIndex][0], location.origin).href;
-      await player.setUrl(url, {
-			    onStart: async () => {
-				      hidePlayBtn(playBtnWrapperElem);
-				      showLoader(loaderElem);
-			    },
-			    onEnd: async () => {
-				      hideLoader(loaderElem);
-				      showPlayBtn(playBtnWrapperElem);
-				      autohidePlayBtn(false, playBtnWrapperElem);
-				      setPlayBtnIcon(PlayBtnIcon.FONTAWESOME_PLAY, playBtnElem);
-			    },
-		  });
-			await player.play();
-			autohidePlayBtn(true, playBtnWrapperElem);
-			setPlayBtnIcon(PlayBtnIcon.FONTAWESOME_PAUSE, playBtnElem);
-			playTitleElem.textContent = movies[videoIndex][1];
-	}
+  async function advance() {
+    if (videoIndex >= videoCount) videoIndex = 0;
+    const url = new URL(movies[videoIndex][0], location.origin).href;
+    await player.setUrl(url, {
+      onStart: async () => {
+        hidePlayBtn(playBtnWrapperElem);
+        showLoader(loaderElem);
+      },
+      onEnd: async () => {
+        hideLoader(loaderElem);
+        showPlayBtn(playBtnWrapperElem);
+        autohidePlayBtn(false, playBtnWrapperElem);
+        setPlayBtnIcon(PlayBtnIcon.FONTAWESOME_PLAY, playBtnElem);
+      },
+    });
+    await player.play();
+    autohidePlayBtn(true, playBtnWrapperElem);
+    setPlayBtnIcon(PlayBtnIcon.FONTAWESOME_PAUSE, playBtnElem);
+    playTitleElem.textContent = movies[videoIndex][1];
+  }
 
   await advance();
 });
