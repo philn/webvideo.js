@@ -111,8 +111,10 @@ function createWVMediaStreamInfo(
     video = {
       width: (track as MP4Box.MP4VideoTrack).video.width,
       height: (track as MP4Box.MP4VideoTrack).video.height,
-      avcDescription: createAVCDescription(trackIdx, file),
     };
+    if (track.codec.startsWith("avc")) {
+      video.avcDescription = createAVCDescription(trackIdx, file);
+    }
   } else if (streamType === 'audio') {
     streamTypeStr = 'audio';
     audio = {
@@ -171,11 +173,6 @@ export class MP4BoxMediaDemuxer implements WVMediaDemuxer {
     const mime = resp.headers.get('Content-Type');
     if (!mime) {
       throw Error('MP4BoxMediaDemuxer FetchError: Content-Type is null');
-    }
-    if (mime !== 'video/mp4') {
-      throw Error(
-        'MP4BoxMediaDemuxer FetchError: Invalid file type found. Currently the only supported format is "video/mp4".'
-      );
     }
 
     this.#fileReader = { file: this.#file, reader: resp.body.getReader(), offset: 0 };
