@@ -3,7 +3,6 @@ import { WVPlayStateKind } from './core/state';
 
 let player: WVPlayer | undefined;
 
-// TODO: We can't rely on AAC-encoded assets here. opus and flac should work though.
 let movies: datatype[][] = [
   ['./assets/TearsOfSteel.mp4', '[Excerpt] “Tears of Steel” by Blender Foundation (CC BY 3.0)'],
   ['./assets/ElephantsDream.mp4', '[Excerpt] “Elephants Dream” by Blender Foundation (CC BY)'],
