@@ -3,6 +3,7 @@ import { WVPlayStateKind } from './core/state';
 
 let player: WVPlayer | undefined;
 
+// TODO: We can't rely on AAC-encoded assets here. opus and flac should work though.
 let movies:datatype[][] = [
 	["./assets/TearsOfSteel.mp4",   "[Excerpt] “Tears of Steel” by Blender Foundation (CC BY 3.0)"],
 	["./assets/ElephantsDream.mp4", "[Excerpt] “Elephants Dream” by Blender Foundation (CC BY)"]
@@ -62,112 +63,66 @@ window.addEventListener('load', async () => {
 
   const videoCount = movies.length;
   let videoIndex = 0;
-  let timeout;
 
-//  selectBtnElem.addEventListener('change', async (e) => {
-//    const elem = e.target as HTMLOptionElement;
-//
-//    if (elem.value) {
-//      if (player?.loadCalled()) {
-//        await player?.unload({
-//          onEnd: async () => {
-//            hidePlayBtn(playBtnWrapperElem);
-//            showLoader(loaderElem);
-//          },
-//        });
-//      }
-//      player = new WVPlayer({
-//        videoUrl: new URL(movies[0][0], location.origin).href,
-//        canvasElem: document.querySelector('#monitor') as HTMLCanvasElement,
-//      });
-//      await player.load({
-//        onStart: async () => {
-//          hidePlayBtn(playBtnWrapperElem);
-//          showLoader(loaderElem);
-//        },
-//        onEnd: async () => {
-//          hideLoader(loaderElem);
-//          showPlayBtn(playBtnWrapperElem);
-//          autohidePlayBtn(false, playBtnWrapperElem);
-//          setPlayBtnIcon(PlayBtnIcon.FONTAWESOME_PLAY, playBtnElem);
-//        },
-//      });
-//    }
-//  });
-
+  player = new WVPlayer({
+	  canvasElem: document.querySelector('#monitor') as HTMLCanvasElement,
+	});
+  player.onEOS = async () => {
+    videoIndex++;
+    await advance();
+  }
 
   setPlayBtnIcon(PlayBtnIcon.FONTAWESOME_PLAY, playBtnElem);
 
   playBtnElem.addEventListener('click', async () => {
 
-    if (!player) {
-      if (player?.loadCalled()) {
-        await player?.unload({
-          onEnd: async () => {
-            hidePlayBtn(playBtnWrapperElem);
-            showLoader(loaderElem);
-          },
-        });
-      }
-			advance();
-		}
-    
     switch (player.playState()) {
       case WVPlayStateKind.PAUSED: {
         if (player.canPlay()) {
-          void player.play();
+          await player.play();
           autohidePlayBtn(true, playBtnWrapperElem);
           setPlayBtnIcon(PlayBtnIcon.FONTAWESOME_PAUSE, playBtnElem);
         }
         break;
       }
       case WVPlayStateKind.PLAYING: {
-        void player.pause();
+        await player.pause();
         autohidePlayBtn(false, playBtnWrapperElem);
         setPlayBtnIcon(PlayBtnIcon.FONTAWESOME_PLAY, playBtnElem);
         break;
       }
       case WVPlayStateKind.STOPPED: {
-        advance();
+        await advance();
       }
     }
 
   });
-  
+
   skipElem.addEventListener('click', async () => {
-		advance();
-});
+		await advance();
+  });
 
 	async function advance() {
-  	if (videoIndex >= videoCount) videoIndex = 0;
-  	if (player) player.unload();
-		player = new WVPlayer({
-			videoUrl: new URL(movies[videoIndex][0], location.origin).href,
-			canvasElem: document.querySelector('#monitor') as HTMLCanvasElement,
-		});
-		await player.load({
-			onStart: async () => {
-				hidePlayBtn(playBtnWrapperElem);
-				showLoader(loaderElem);
-			},
-			onEnd: async () => {
-				hideLoader(loaderElem);
-				showPlayBtn(playBtnWrapperElem);
-				autohidePlayBtn(false, playBtnWrapperElem);
-				setPlayBtnIcon(PlayBtnIcon.FONTAWESOME_PLAY, playBtnElem);
-			},
-		});
-		if (player.canPlay()) {
-			void player.play();
+  	  if (videoIndex >= videoCount)
+          videoIndex = 0;
+      const url = new URL(movies[videoIndex][0], location.origin).href;
+      await player.setUrl(url, {
+			    onStart: async () => {
+				      hidePlayBtn(playBtnWrapperElem);
+				      showLoader(loaderElem);
+			    },
+			    onEnd: async () => {
+				      hideLoader(loaderElem);
+				      showPlayBtn(playBtnWrapperElem);
+				      autohidePlayBtn(false, playBtnWrapperElem);
+				      setPlayBtnIcon(PlayBtnIcon.FONTAWESOME_PLAY, playBtnElem);
+			    },
+		  });
+			await player.play();
 			autohidePlayBtn(true, playBtnWrapperElem);
 			setPlayBtnIcon(PlayBtnIcon.FONTAWESOME_PAUSE, playBtnElem);
 			playTitleElem.textContent = movies[videoIndex][1];
-    	videoIndex++;
-    	clearTimeout(timeout);
-    	console.log(player.lengthMS());
-    	timeout = setTimeout(advance, player.lengthMS() + 2345);
-		}
 	}
 
-
+  await advance();
 });
