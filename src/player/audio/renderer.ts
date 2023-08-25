@@ -2,10 +2,13 @@ import { AUDIO_WORKLET_NAME, AUDIO_WORKLET_PATH } from '../../core/constants';
 import { WVSharedState, serializeWVSharedState } from '../../core/state';
 import { WVMediaStreamInfo } from '../../media/media';
 
+const webAudioPeakMeter = require('web-audio-peak-meter');
+
 export class WVAudioRenderer {
   #audioCtx: AudioContext;
   #workletNode?: AudioWorkletNode;
   #gainNode?: GainNode;
+  #peakMeter?: WebAudioPeakMeter;
 
   constructor(audioStream: WVMediaStreamInfo) {
     this.#audioCtx = new AudioContext({
@@ -25,6 +28,16 @@ export class WVAudioRenderer {
     this.#gainNode = new GainNode(this.#audioCtx, { gain: 0.5 });
     this.#workletNode.connect(this.#gainNode).connect(this.#audioCtx.destination);
 
+    var meterElement = document.getElementById('peak-meter');
+    const options = {
+      vertical: true,
+    };
+    this.#peakMeter = new webAudioPeakMeter.WebAudioPeakMeter(
+      this.#workletNode,
+      meterElement,
+      options
+    );
+
     return this.#workletNode.port;
   }
 
@@ -37,6 +50,7 @@ export class WVAudioRenderer {
   }
 
   async close(): Promise<void> {
+    this.#peakMeter.cleanup();
     this.#gainNode?.disconnect();
     this.#workletNode?.disconnect();
     this.#workletNode?.port.close();
