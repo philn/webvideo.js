@@ -96,6 +96,7 @@ window.addEventListener('load', async () => {
   });
 
   skipElem.addEventListener('click', async () => {
+    videoIndex++;
     await advance();
   });
 
