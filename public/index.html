@@ -14,13 +14,21 @@
 
   html, body {
     font-family: Meiryo, system-ui, sans-serif, "Font Awesome 5 Free";
-    background: rgb(20,20,20);
     color: rgb(231, 233, 234);
     width: 100%;
     height: 100%;
     margin: 0;
     padding: 0;
   }
+html {
+	font-size: 2vmax;
+	background:
+		repeating-linear-gradient(
+			100deg, hsl(243deg 100% 87%) 1vmax, 
+			hsl(243deg 100% 93%) 2vmax, 
+			hsl(240deg 100% 91%) 2.1vmax
+		) top left;
+}
 
   #app_root {
     display: grid;
@@ -45,9 +53,7 @@
     font-weight: 900;
     text-wrap: balance;
     background: 
-    	radial-gradient(50vw 50vw at center, rgb(210 210 255 / 0.9755) 40vw, rgb(210 210 255 / 0.9)),
-    	repeating-linear-gradient(100deg, rgb(0 0 255 / 0.5) 1ch, transparent 2ch, rgb(0 0 255 / 0.5) 2.1ch) 0% 50%,
-    	rgb(210 210 255);
+    	radial-gradient(50vw 50vw at center, rgb(210 210 255 / 0.95) 35vw, rgb(210 210 255 / 0.75) calc(100% - 5em));
     color: rgb(0 0 0);
   }
 
@@ -61,8 +67,17 @@
     max-height: 100%;
   }
   
+  #video_area {
+  	background:	linear-gradient(
+  		180deg,
+  		rgb(210 210 255 / 0.75),
+  		rgb(20 20 20 / 0.85)
+  	);
+  }
+  
   #monitor_area {
     position: relative;
+    background: rgb(0 0 0);
   }
 
   #play_btn_wrapper {
@@ -111,7 +126,12 @@
     max-height: 100%;
     min-height: 0;
     object-fit: contain;
-    background: rgb(13 13 13);
+  }
+
+  #peak-meter {
+    width: 3em;
+    height: 100%;
+    margin: 1em 0;
   }
 
   #title_area {
@@ -131,9 +151,7 @@
     justify-content: end;
     padding-inline: 10vw 0;
     background: 
-    	linear-gradient(90deg, rgb(210 210 255 / 0.75), rgb(210 210 255 / 0.95) 7.5vw, rgb(210 210 255 / 1) 100%) 0 50%,
-    	repeating-linear-gradient(100deg, rgb(0 0 255 / 0.5) 1ch, transparent 2ch, rgb(0 0 255 / 0.5) 2.1ch) 0% 50%,
-    	rgb(210 210 255);
+    	linear-gradient(90deg, rgb(210 210 255 / 0.5), rgb(210 210 255 / 0.9) 7.5vw, rgb(210 210 255 / 1) 100%) 0 50%;
     color: rgb(0 0 0);
   }
   #title_area h3 {
@@ -142,7 +160,7 @@
     border-top: 1px solid rgb(210 210 255 / 0.67);
     background: 
     	linear-gradient(100deg, rgb(210 210 255) 40%, transparent 42%, 48%, rgb(210 210 255) 50%, 57%, transparent 58%) 0% 50% / 2em 4em no-repeat,
-    	rgb(210 210 255 / 0.2);
+    	linear-gradient(100deg, rgb(20 20 20 / 0.95) 33%, rgb(20 20 20 / 0.85) calc(100% - 5em));
   }
 </style>
 <body>
@@ -162,7 +180,7 @@
         <div id="loader_wrapper" style="display: none"><img class="loader_img" src="./assets/loader.svg"/></div>
         <canvas id="monitor" width="800" height="600"></canvas>
       </div>
-      <div id="peak-meter" style="width: 5em; height: 500px; margin: 1em 0;"></div>
+      <div id="peak-meter"></div>
 
     </div>
 
