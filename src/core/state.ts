@@ -8,6 +8,7 @@ export type WVSharedState = {
   audioBufferFull: WVSharedFlag;
   videoDecoderShouldBeDead: WVSharedFlag;
   audioDecoderShouldBeDead: WVSharedFlag;
+  enableAudio: boolean;
 };
 
 type SerializableWVSharedState = {

@@ -63,8 +63,18 @@ window.addEventListener('load', async () => {
   const videoCount = movies.length;
   let videoIndex = 0;
 
+  const url = new URL(window.location.href);
+  const params = url.searchParams;
+  let enableAudio = true;
+  if (params.get('disable-audio') !== null) {
+    enableAudio = false;
+    var meterElement = document.getElementById('peak-meter');
+    meterElement.style.display = 'none';
+  }
+
   player = new WVPlayer({
     canvasElem: document.querySelector('#monitor') as HTMLCanvasElement,
+    enableAudio: enableAudio,
   });
   player.onEOS = async () => {
     videoIndex++;
