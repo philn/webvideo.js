@@ -86,10 +86,7 @@ class WebGLRenderer {
     gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, frame);
     frame.close();
 
-    // Configure and clear the drawing area.
-    gl.viewport(0, 0, gl.drawingBufferWidth, gl.drawingBufferHeight);
-    gl.clearColor(1.0, 0.0, 0.0, 1.0);
-    gl.clear(gl.COLOR_BUFFER_BIT);
+    this.clear();
 
     // Draw the frame.
     gl.drawArrays(gl.TRIANGLE_FAN, 0, 4);
@@ -97,7 +94,10 @@ class WebGLRenderer {
 
   clear() {
     const gl = this.#ctx;
-    gl.clearColor(1, 0, 0, 0);
+    // Configure and clear the drawing area.
+    gl.viewport(0, 0, gl.drawingBufferWidth, gl.drawingBufferHeight);
+    gl.clearColor(1.0, 0.0, 0.0, 1.0);
+    gl.clear(gl.COLOR_BUFFER_BIT);
   }
 }
 
